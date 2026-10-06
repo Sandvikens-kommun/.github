@@ -7,19 +7,19 @@ Can be used as a checklist.
 
 Scope: everything is done manually through the Azure and Fabric portals.
 Roles required across the process:
-•	Global Administrator or Billing Administrator — to create the subscription.
-•	Entra ID Administrator — to create groups and app registrations.
-•	Fabric Administrator — to change tenant settings and allow SP access.
-•	Capacity / Subscription Owner or Contributor — to create the Fabric capacity.
+1.	Global Administrator or Billing Administrator — to create the subscription.
+2.	Entra ID Administrator — to create groups and app registrations.
+3.	Fabric Administrator — to change tenant settings and allow SP access.
+4.	Capacity / Subscription Owner or Contributor — to create the Fabric capacity.
 
 ## Pre-flight decisions
 
-•	Environment naming convention: platform-{env}-{role} (e.g., sg-fabric-platform-dev-admins). Use consistent suffixes for dev/test/prod.
-•	Networking posture: public endpoints only, or require private connectivity (managed private endpoints, gateway, or VNet integration)?
-•	Data residency/region: pick the region closest to users/data and use the same region for resource group and capacity.
-•	Cost guardrails: initial SKU (F2), monthly budget threshold, auto-pause policy for non-prod.
-•	Backup/versioning stance: Git integration mandatory for Fabric items; retention and Delta time travel policy for data.
-•	CI/CD model: enforce per-stage service principals and federated credentials where possible.
+1.	Environment naming convention: platform-{env}-{role} (e.g., sg-fabric-platform-dev-admins). Use consistent suffixes for dev/test/prod.
+2.	Networking posture: public endpoints only, or require private connectivity (managed private endpoints, gateway, or VNet integration)?
+3.	Data residency/region: pick the region closest to users/data and use the same region for the resource group and capacity.
+4.	Cost guardrails: initial SKU (F2), monthly budget threshold, auto-pause policy for non-prod.
+5.	Backup/versioning stance: Git integration mandatory for Fabric items; retention and Delta time travel policy for data.
+6.	CI/CD model: enforce per-stage service principals and federated credentials where possible.
 
 ## High-level step sequence
 
@@ -70,12 +70,12 @@ CI/CD and service principals are required for this production-ready plan. The fo
 
 ## CI/CD recommendations and workflow
 
-•	Repository layout: a single repo with folders per workspace and manifests for Lakehouse schemas, notebooks, pipelines, semantic models, and deployment manifests.
-•	Branch strategy: short-lived feature branches, protected main branch for prod, and a dev branch for continuous integration. Use protected environments for any production-sensitive deploys.
-•	CI pipeline: lint, static checks, unit tests (where applicable), validate deployment manifests against a schema, run a dry-run or plan step that does not modify Fabric.
-•	CD pipeline: triggered on push to dev/test/main or via pull request approvals. Uses the corresponding SP via federated credential to authenticate and apply changes to the Fabric workspace via the Fabric REST API 
+1.	Repository layout: a single repo with folders per workspace and manifests for Lakehouse schemas, notebooks, pipelines, semantic models, and deployment manifests.
+2.	Branch strategy: short-lived feature branches, a protected main branch for prod, and a dev branch for continuous integration. Use protected environments for any production-sensitive deploys.
+3.	CI pipeline: lint, static checks, unit tests (where applicable), validate deployment manifests against a schema, run a dry-run or plan step that does not modify Fabric.
+4.	CD pipeline: triggered on push to dev/test/main or via pull request approvals. Uses the corresponding SP via federated credential to authenticate and apply changes to the Fabric workspace via the Fabric REST API 
     or Fabric's publish/deploy endpoints.
-•	Approval gates: require at least one approver from the platform team for prod deploys and use environment-based approvals where your CI/CD system supports them.
+5.	Approval gates: require at least one approver from the platform team for prod deploys and use environment-based approvals where your CI/CD system supports them.
 
 
 
